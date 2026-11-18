@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { registerUser } from "./services/taskServices"
 
 export default function SignupPage() {
     const [name, setName] = useState({
@@ -8,10 +9,17 @@ export default function SignupPage() {
     })
 
     const handleInput = (field, value) => {
-        setName(prev => ({...prev, [field]: value}))
+        setName(prev => ({ ...prev, [field]: value }))
     }
-    const submit = () => {
+    const submit = async () => {
         console.log(name)
+
+        try {
+            const res = await registerUser(name)
+            console.log(res.data.message)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (

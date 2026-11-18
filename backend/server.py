@@ -16,15 +16,15 @@ class Signup_Data(BaseModel):
     username: str
     password: str
 
-users = list[dict]
+users: list[Signup_Data] = []
 
 @app.get("/")
 def read_root():
-    return {"message": "Python FastAPI backend is running!"}
+    return {"message": users}
 
-@app.post('/signup')
+@app.post('/register')
 def register_user(user_data: Signup_Data):
     users.append(user_data)
     
-    return ('message:' 'Successfully registered!')
+    return {"message": "Successfully registered!"}
     
