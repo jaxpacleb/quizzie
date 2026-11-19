@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { registerUser } from "./services/taskServices"
 
-export default function SignupPage({onChange}) {
+export default function SignupPage({ onChange }) {
     const [name, setName] = useState({
         username: '',
         password: '',
@@ -41,8 +41,8 @@ export default function SignupPage({onChange}) {
                     <input type="text" id="confirmPassword" onChange={(e) => handleInput(e.target.id, e.target.value)} placeholder="Confirm your password..." className="outline-none bg-white pl-3 py-1 rounded-xl" />
                 </section>
 
-                <button onClick={submit} className="bg-green-200 py-1.5 cursor-pointer rounded-md">Login</button>
-                <button className="cursor-pointer" onChange={() => onChange(false)}>I already have an account</button>
+                <button onClick={submit} className="bg-green-200 py-1.5 cursor-pointer rounded-md">Sign up</button>
+                <button className="cursor-pointer" onClick={() => onChange(false)}>I already have an account</button>
             </div>
         </div>
     )

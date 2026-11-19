@@ -28,8 +28,9 @@ def register_user(user: Credential):
     
     return {"message": "Successfully registered!"}
 
-@app.post('/login')
+@app.post('/login', status_code=201)
 def login_user(user: Credential):
+    print("Current users in list:", users)
     for x in users:
-        print(x)
+        print(f"username: {x['username']} password: {x['password']}")
     

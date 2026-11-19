@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { loginUser } from "./services/taskServices"
 
 export default function LoginPage({ onChange }) {
     const [cred, setCred] = useState({
@@ -10,8 +11,8 @@ export default function LoginPage({ onChange }) {
         setCred(prev => ({ ...prev, [field]: value }))
     }
 
-    const login = () => {
-
+    const login = async () => {
+        const res = await loginUser(cred)
     }
 
     return (
@@ -29,7 +30,7 @@ export default function LoginPage({ onChange }) {
                 </section>
 
                 <button onClick={login} className="bg-green-200 py-1.5 cursor-pointer rounded-md">Login</button>
-                <button onChange={() => onChange(true)}>I dont have account yet</button>
+                <button onClick={() => onChange(true)} className="cursor-pointer">I dont have account yet</button>
             </div>
         </div>
     )
