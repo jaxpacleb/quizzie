@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from database import supabase
 
 app = FastAPI()
 
@@ -16,21 +17,33 @@ class Credential(BaseModel):
     username: str
     password: str
 
-users: list[Credential] = []
 
-@app.get("/")
-def read_root():
-    return {"message": users}
 
 @app.post('/register')
 def register_user(user: Credential):
-    users.append(user)
+    
+    response = (
+                supabase
+                .table('accounts')
+                .insert({'username': user.username, 'password': user.password})
+                .execute()
+                )
+    
+    if user.username.strip() == '' or user.password.strip() == '':
+        raise HTTPException(
+                    status_code=400,
+                    detail='Some of your field is EMPTY!'
+                )
+    
+    if not response.data: 
+        raise HTTPException(
+            status_code=401,
+            detail='Registration unsuccessful!'
+        )
     
     return {"message": "Successfully registered!"}
 
 @app.post('/login', status_code=201)
 def login_user(user: Credential):
-    print("Current users in list:", users)
-    for x in users:
-        print(f"username: {x['username']} password: {x['password']}")
+    return 
     

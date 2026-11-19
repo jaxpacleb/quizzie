@@ -12,13 +12,20 @@ export default function SignupPage({ onChange }) {
         setName(prev => ({ ...prev, [field]: value }))
     }
     const submit = async () => {
-        console.log(name)
+        if (name.username.trim() == '' || name.password.trim() == '' || name.confirmPassword.trim() == '') 
+            return alert('Your field/s is EMPTY!')
+
+
+        if (name.password.trim() !== name.confirmPassword.trim())
+            return alert('Your password DID NOT MATCH!')
 
         try {
             const res = await registerUser(name)
             console.log(res.data.message)
         } catch (error) {
-            console.log(error)
+            const { status } = error.response
+            console.log(error.response)
+            console.log(status)
         }
     }
 
