@@ -1,16 +1,14 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
-import SignupPage from './Login'
+import SignupPage from './SignupPage'
+import LoginPage from './LoginPage'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showSignup, setShowSignup] = useState(true)
 
   return (
     <>
-      <SignupPage />
+      {showSignup ? <SignupPage onChange={setShowSignup} /> : <LoginPage onChange={setShowSignup} />}
     </>
   )
 }

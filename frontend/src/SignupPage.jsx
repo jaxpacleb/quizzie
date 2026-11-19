@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { registerUser } from "./services/taskServices"
 
-export default function SignupPage() {
+export default function SignupPage({onChange}) {
     const [name, setName] = useState({
         username: '',
         password: '',
@@ -42,6 +42,7 @@ export default function SignupPage() {
                 </section>
 
                 <button onClick={submit} className="bg-green-200 py-1.5 cursor-pointer rounded-md">Login</button>
+                <button className="cursor-pointer" onChange={() => onChange(false)}>I already have an account</button>
             </div>
         </div>
     )
