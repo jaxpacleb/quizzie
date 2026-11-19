@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import bcrypt
 from database import supabase
 
 app = FastAPI()
@@ -22,26 +23,25 @@ class Credential(BaseModel):
 @app.post('/register')
 def register_user(user: Credential):
     
-    response = (
-                supabase
-                .table('accounts')
-                .insert({'username': user.username, 'password': user.password})
-                .execute()
-                )
+    existing = supabase.table("users").select("id").eq("username", user.username).execute()
+    if existing.data:
+        raise HTTPException(status_code=400, detail="Username is already taken.")
     
-    if user.username.strip() == '' or user.password.strip() == '':
-        raise HTTPException(
-                    status_code=400,
-                    detail='Some of your field is EMPTY!'
-                )
+    hashed_bytes = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+    hashed_password = hashed_bytes.decode("utf-8")
     
-    if not response.data: 
-        raise HTTPException(
-            status_code=401,
-            detail='Registration unsuccessful!'
-        )
-    
-    return {"message": "Successfully registered!"}
+    response = supabase.table("users").insert({
+        "username": user.username,
+        "password": hashed_password
+    }).execute()
+
+    return {
+        "message": "Registration successful!",
+        "user": {
+            "id": response.data[0]["id"],
+            "username": response.data[0]["username"]
+        }
+    }
 
 @app.post('/login', status_code=201)
 def login_user(user: Credential):
