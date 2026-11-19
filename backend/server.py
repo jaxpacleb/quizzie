@@ -12,19 +12,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Signup_Data(BaseModel):
+class Credential(BaseModel):
     username: str
     password: str
 
-users: list[Signup_Data] = []
+users: list[Credential] = []
 
 @app.get("/")
 def read_root():
     return {"message": users}
 
 @app.post('/register')
-def register_user(user_data: Signup_Data):
-    users.append(user_data)
+def register_user(user: Credential):
+    users.append(user)
     
     return {"message": "Successfully registered!"}
+
+@app.post('/login')
+def login_user(user: Credential):
+    for x in users:
+        print(x)
     
