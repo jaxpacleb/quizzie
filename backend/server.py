@@ -23,14 +23,14 @@ class Credential(BaseModel):
 @app.post('/register')
 def register_user(user: Credential):
     
-    existing = supabase.table("users").select("id").eq("username", user.username).execute()
+    existing = supabase.table("accounts").select("id").eq("username", user.username).execute()
     if existing.data:
         raise HTTPException(status_code=400, detail="Username is already taken.")
     
     hashed_bytes = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
     hashed_password = hashed_bytes.decode("utf-8")
     
-    response = supabase.table("users").insert({
+    response = supabase.table("accounts").insert({
         "username": user.username,
         "password": hashed_password
     }).execute()
