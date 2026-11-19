@@ -6,3 +6,10 @@ export const registerUser = (credential) => {
         password: credential.password
     })
 }
+
+export const loginUser = (credential) => {
+    return axiosClient.post('/login', {
+        username: credential.username,
+        password: credential.password
+    })
+}
