@@ -1,22 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import bcrypt
 from database import supabase
+from schema.model import Credential
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://10.87.213.247:5173", 'http://localhost:5173'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-class Credential(BaseModel):
-    username: str
-    password: str
 
 
 
@@ -45,6 +41,7 @@ def register_user(user: Credential):
 
 @app.post("/login", status_code=200)
 def login_user(user: Credential):
+    
     # 1. Hanapin ang user sa Supabase 'users' tab   le gamit ang username
     response = (
         supabase.table("accounts")
@@ -52,10 +49,11 @@ def login_user(user: Credential):
         .eq("username", user.username)
         .execute()
     )
+    
 
     # 2. Kung walang nahanap na record, mali ang username
     if not response.data:
-        raise HTTPException(status_code=401, detail="Invalid username or password.")
+        raise HTTPException(status_code=400, detail="Invalid username or password.")
 
     db_user = response.data[0]
 
